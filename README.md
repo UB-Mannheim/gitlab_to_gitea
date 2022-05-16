@@ -17,6 +17,7 @@ This fork was used to migrate from Gitlab Version 14.8 to Gitea Version 1.16.7.
 Modifications:
  - Use Gitlab api-key instead of login/password authentication
  - Only import active users from gitlab instance
+ - Import organisations and projects by PATH instead of NAME to preserve URLs
 
 ## Usage
 Change items in the config section of the script.
