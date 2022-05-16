@@ -441,8 +441,12 @@ def _import_users(gitea_api: pygitea, users: [gitlab.v4.objects.User], notify: b
     for user in users:
         keys: [gitlab.v4.objects.UserKey] = user.keys.list(all=True)
 
-        print("Importing user " + user.username + "...")
+        print("Found user " + user.username + "...")
         print("Found " + str(len(keys)) + " public keys for user " + user.username)
+
+        if user.state != "active":
+            print("Skipping inactive user!")
+            continue
 
         if not user_exists(gitea_api, user.username):
             tmp_password = 'Tmp1!' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
