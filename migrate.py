@@ -22,10 +22,6 @@ GLOBAL_ERROR_COUNT = 0
 GITLAB_URL = os.getenv('GITLAB_URL', 'https://gitlab.source.com')
 GITLAB_TOKEN = os.getenv('GITLAB_TOKEN', 'gitlab token')
 
-# needed to clone the repositories, keep empty to try publickey (untested)
-GITLAB_ADMIN_USER = os.getenv('GITLAB_ADMIN_USER', 'admin username')
-GITLAB_ADMIN_PASS = os.getenv('GITLAB_ADMIN_PASS', 'admin password')
-
 GITEA_URL = os.getenv('GITEA_URL','https://gitea.dest.com')
 GITEA_TOKEN = os.getenv('GITEA_TOKEN', 'gitea token')
 #######################
@@ -383,8 +379,7 @@ def _import_project_issues(gitea_api: pygitea, issues: [gitlab.v4.objects.Projec
 def _import_project_repo(gitea_api: pygitea, project: gitlab.v4.objects.Project):
     if not repo_exists(gitea_api, name_clean(project.namespace['name']), name_clean(project.name)):
         clone_url = project.http_url_to_repo
-        if GITLAB_ADMIN_PASS == '' and GITLAB_ADMIN_USER == '':
-            clone_url = project.ssh_url_to_repo
+
         private = project.visibility == 'private' or project.visibility == 'internal'
 
         # Load the owner (users and groups can both be fetched using the /users/ endpoint)
@@ -397,8 +392,7 @@ def _import_project_repo(gitea_api: pygitea, project: gitlab.v4.objects.Project)
                 print_warning(f"Description of {name_clean(project.name)} had to be truncated to 255 characters!")
 
             import_response: requests.Response = gitea_api.post("/repos/migrate", json={
-                "auth_password": GITLAB_ADMIN_PASS,
-                "auth_username": GITLAB_ADMIN_USER,
+                "auth_token": GITLAB_TOKEN,
                 "clone_addr": clone_url,
                 "description": description,
                 "mirror": False,

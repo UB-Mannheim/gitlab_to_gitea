@@ -12,7 +12,10 @@ This script support migrating the following data:
  - Groups
  - Public SSH keys
 
-Tested with Gitlab Version 13.0.6 and Gitea Version 1.11.6.
+This fork was used to migrate from Gitlab Version 14.8 to Gitea Version 1.16.7.
+
+Modifications:
+ - Use Gitlab api-key instead of login/password authentication
 
 ## Usage
 Change items in the config section of the script.
@@ -31,3 +34,6 @@ python3 -m pip install -r requirements.txt
 ```
 
 Then start the migration script `python3 migrate.py`.
+
+## Notes
+Users have to reset their password so E-Mail has to be configured on the gitea instance.
